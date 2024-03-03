@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mall.mapper.UserMapper">
+
+    <select id="userLogin" resultType="com.example.mall.entity.User">
+        select *
+        from user
+        where username = #{name}
+          and password = #{pwd}
+    </select>
+
+    <insert id="registerUser" parameterType="com.example.mall.entity.User" useGeneratedKeys="true" keyProperty="user_id">
+        insert into user (username, password, address, phone)
+        values (#{username}, #{password}, #{address}, #{phone})
+    </insert>
+<!--<selectKey>设置keyProperty为返回的余额字段名 表示在更新后再查询-->
+    <update id="recharge">
+        UPDATE user
+        SET balance = balance + #{amount}
+        WHERE user_id = #{id};
+        <selectKey keyProperty="balance" resultType="float" order="AFTER">
+            SELECT balance FROM user WHERE user_id = #{id}
+        </selectKey>
+    </update>
+
+    <select id="getUserByName" resultType="com.example.mall.entity.User">
+        select *
+        from user
+        where username = #{name}
+    </select>
+    <select id="getUserById" resultType="com.example.mall.entity.User">
+        select *
+        from user
+        where user_id = #{id}
+    </select>
+
+    <insert id="addFeedback" parameterType="com.example.mall.entity.UserFeedback">
+        insert into feedback (username, email, feedback, submittime)
+        values (#{username}, #{email}, #{feedback}, #{submitTime})
+    </insert>
+
+    <select id="getFeedback" resultType="com.example.mall.entity.UserFeedback">
+        SELECT *
+        FROM feedback
+        ORDER BY id DESC
+    </select>
+
+</mapper>
